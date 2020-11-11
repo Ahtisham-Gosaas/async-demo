@@ -1,32 +1,28 @@
 console.log('Before');
-// console.log(get_user(1));
-get_user(1, user_callback);
-console.log('After');
 
-// function get_user(id){
-//   setTimeout(() => {
-//     console.log("Reading from DB...");
-//   }, 2000);
-// }
+get_user(1)
+  .then((user) => get_repos(user.name))
+  .then((repos) => console.log(repos))
+  .catch((err) => console.log('Error: ', err.message));
 
-function get_user(id, callback){
-  setTimeout(() => {
-    console.log("Reading from DB...");
-    callback({id: id, name: 'some_name'});
-  }, 2000);
+  console.log('After');
+
+function get_user(id){
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      console.log("Reading from DB...");
+      resolve({id: id, name: 'some_name'});
+      // reject(new Error('error'));
+    }, 2000);
+  });
+  
 }
 
-function get_repos(username, callback){
-  setTimeout(() => {
-    callback(['repo1', 'repo2', 'repo3']);
-  }, 2000);
-}
-
-function repo_callback(repos){
-  console.log("Repos: " + repos);
-}
-
-function user_callback(user){
-  console.log("Name: " + user.name);
-  get_repos(user.name, repo_callback);
+function get_repos(username){
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(['repo1', 'repo2', 'repo3']);
+      // reject('some error message');
+    }, 2000);
+  });
 }
